@@ -1,0 +1,5 @@
+{
+    "require": {
+        "jolicode/jolinotif": "^2.0"
+    }
+}
