@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-php ./memAlert.php
+php -f /home/sza/www/notifier/memAlert.php

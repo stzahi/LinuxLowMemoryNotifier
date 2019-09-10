@@ -9,7 +9,7 @@ $notify = false;
 
 while (true) {
     $conf = explode(',', file_get_contents(__DIR__ . '/conf.txt') );
-    $limitGB = $conf[0];
+    $limitGB = (float)$conf[0];
     $intervalSEC = $conf[1];
 
     $data = shell_exec('free -h -t');
@@ -24,19 +24,17 @@ while (true) {
 
     // die(print_r($tachles));
 
-    if ((float)$tachles[3] < $limitGB || strpos($tachles[3], 'M') !== false) {
+    if ((float)$tachles[3] < $limitGB || strpos($tachles[3], 'M') > 0) {
         $notify = true;
     }
 
 
-    if (!$notify) {
-        die();
+    if ($notify === true) {
+        $icon = __DIR__.'/icon.png';
+        shell_exec("/usr/bin/notify-send -i \"$icon\" \"Low memory\" \"Total: {$tachles[1]} | Available: {$tachles[3]}\"");
     }
 
-    $icon = __DIR__.'/icon.png';
-
-    shell_exec("export DISPLAY=:0 /usr/bin/notify-send -i \"$icon\" \"Low memory\" \"Total: {$tachles[1]} | Available: {$tachles[3]}\"");
-    sleep((int)$intervalSEC);
+    sleep( (int)$intervalSEC );
 }
 
 
