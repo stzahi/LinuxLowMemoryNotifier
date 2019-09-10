@@ -1,9 +1,10 @@
 # LinuxLowMemoryNotifier
 a tiny php script to send system notification whenever your machine's memory is running out
 
-Simply add it to your crontab
 
-e.g:
-If you want it to be checked in 10 minutes interval
+1. add the script to your linux startup scripts (init.d).
+2. Change conf.txt file to your preferences.
+for example:
+"3,30" means that the script will check every 30 seconds if there are at least 3GB of available memory.
 
-*/10 * * * * php /path/to/script/memAlert.php
+Have fun!

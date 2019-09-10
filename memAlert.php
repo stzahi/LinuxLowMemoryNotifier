@@ -7,6 +7,7 @@
 ini_set('max_execution_time','0');
 $notify = false;
 
+$icon = __DIR__.'/icon.png';
 while (true) {
     $conf = explode(',', file_get_contents(__DIR__ . '/conf.txt') );
     $limitGB = (float)$conf[0];
@@ -21,16 +22,12 @@ while (true) {
             $tachles[] = $val;
         }
     }
-
-    // die(print_r($tachles));
-
     if ((float)$tachles[3] < $limitGB || strpos($tachles[3], 'M') > 0) {
         $notify = true;
     }
-
+    var_dump($notify);
 
     if ($notify === true) {
-        $icon = __DIR__.'/icon.png';
         shell_exec("/usr/bin/notify-send -i \"$icon\" \"Low memory\" \"Total: {$tachles[1]} | Available: {$tachles[3]}\"");
     }
 
