@@ -1,38 +1,60 @@
  
 <?php
-include __DIR__.'/vendor/autoload.php';
+// include __DIR__.'/vendor/autoload.php';
  
-use Joli\JoliNotif\Notification;
-use Joli\JoliNotif\NotifierFactory;
-
+// use Joli\JoliNotif\Notification;
+// use Joli\JoliNotif\NotifierFactory;
+ini_set('max_execution_time','0');
 $notify = false;
 
-$data = shell_exec('free -h -t');
-$data = explode("\n",$data);
-$data = explode(" ",$data[3]);
-$tachles = [];
-foreach($data as $val)
-    if(!empty($val)) $tachles[] = $val;
+while (true) {
+    $conf = explode(',', file_get_contents(__DIR__ . '/conf.txt') );
+    $limitGB = $conf[0];
+    $intervalSEC = $conf[1];
 
-    if((float)$tachles[3] < 1)
+    $data = shell_exec('free -h -t');
+    $data = explode("\n", $data);
+    $data = explode(" ", $data[3]);
+    $tachles = [];
+    foreach ($data as $val) {
+        if (!empty($val)) {
+            $tachles[] = $val;
+        }
+    }
+
+    // die(print_r($tachles));
+
+    if ((float)$tachles[3] < $limitGB || strpos($tachles[3], 'M') !== false) {
         $notify = true;
+    }
 
 
-if(!$notify) die();
+    if (!$notify) {
+        die();
+    }
 
-// Create a Notifier
-$notifier = NotifierFactory::create();
+    $icon = __DIR__.'/icon.png';
 
-// Create your notification
-$notification =
-    (new Notification())
-    ->setTitle('Low memory')
-    ->setBody("Total: {$tachles[1]} | Available: {$tachles[3]}")
-    ->setIcon(__DIR__.'/icon.png')
-    // ->addOption('subtitle', 'This is a subtitle') // Only works on macOS (AppleScriptNotifier)
-    // ->addOption('sound', 'Frog') // Only works on macOS (AppleScriptNotifier)
-;
+    shell_exec("export DISPLAY=:0 /usr/bin/notify-send -i \"$icon\" \"Low memory\" \"Total: {$tachles[1]} | Available: {$tachles[3]}\"");
+    sleep((int)$intervalSEC);
+}
 
-// Send it
-$notifier->send($notification);
+
+
+// // Create a Notifier for other OS
+// $notifier = NotifierFactory::create();
+
+// // Create your notification
+// $notification =
+//     (new Notification())
+//     ->setTitle('Low memory')
+//     ->setBody("Total: {$tachles[1]} | Available: {$tachles[3]}")
+//     ->setIcon(__DIR__.'/icon.png')
+//     // ->addOption('subtitle', 'This is a subtitle') // Only works on macOS (AppleScriptNotifier)
+//     // ->addOption('sound', 'Frog') // Only works on macOS (AppleScriptNotifier)
+// ;
+
+// // Send it
+// $notifier->send($notification);
+
 ?>
