@@ -1,15 +1,16 @@
  
 <?php
 // include __DIR__.'/vendor/autoload.php';
- 
+
 // use Joli\JoliNotif\Notification;
 // use Joli\JoliNotif\NotifierFactory;
-ini_set('max_execution_time','0');
-$notify = false;
+ini_set('max_execution_time', '0');
 
-$icon = __DIR__.'/icon.png';
+$icon = __DIR__ . '/icon.png';
 while (true) {
-    $conf = explode(',', file_get_contents(__DIR__ . '/conf.txt') );
+    $notify = false;
+
+    $conf = explode(',', file_get_contents(__DIR__ . '/conf.txt'));
     $limitGB = (float)$conf[0];
     $intervalSEC = $conf[1];
 
@@ -31,7 +32,7 @@ while (true) {
         shell_exec("/usr/bin/notify-send -i \"$icon\" \"Low memory\" \"Total: {$tachles[1]} | Available: {$tachles[3]}\"");
     }
 
-    sleep( (int)$intervalSEC );
+    sleep((int)$intervalSEC);
 }
 
 
