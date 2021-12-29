@@ -8,6 +8,7 @@ ini_set('max_execution_time', '0');
 
 $icon = __DIR__ . '/icon.png';
 while (true) {
+
     $notify = false;
 
     $conf = explode(',', file_get_contents(__DIR__ . '/conf.txt'));
@@ -18,11 +19,13 @@ while (true) {
     $data = explode("\n", $data);
     $data = explode(" ", $data[3]);
     $tachles = [];
+
     foreach ($data as $val) {
         if (!empty($val)) {
             $tachles[] = $val;
         }
     }
+
     if ((float)$tachles[3] < $limitGB || strpos($tachles[3], 'M') > 0) {
         $notify = true;
     }
@@ -35,22 +38,5 @@ while (true) {
     sleep((int)$intervalSEC);
 }
 
-
-
-// // Create a Notifier for other OS
-// $notifier = NotifierFactory::create();
-
-// // Create your notification
-// $notification =
-//     (new Notification())
-//     ->setTitle('Low memory')
-//     ->setBody("Total: {$tachles[1]} | Available: {$tachles[3]}")
-//     ->setIcon(__DIR__.'/icon.png')
-//     // ->addOption('subtitle', 'This is a subtitle') // Only works on macOS (AppleScriptNotifier)
-//     // ->addOption('sound', 'Frog') // Only works on macOS (AppleScriptNotifier)
-// ;
-
-// // Send it
-// $notifier->send($notification);
 
 ?>
